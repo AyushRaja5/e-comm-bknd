@@ -46,4 +46,20 @@ const loginUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser };
+const getUserProfile = async (req, res) => {
+  const userId = req.user.id; // Extract user ID from the token payload
+
+  try {
+    // Fetch user details from database
+    const result = await pool.query('SELECT id, username, role FROM users WHERE id = $1', [userId]);
+    
+    if (result.rows.length === 0) return res.status(404).json({ message: 'User not found' });
+
+    const user = result.rows[0];
+    res.json({ username: user.username, role: user.role, id: user.id }); // Return user details
+  } catch (error) {
+    res.status(500).json({ message: `Server error: ${error.message}` });
+  }
+};
+
+module.exports = { registerUser, loginUser, getUserProfile };
