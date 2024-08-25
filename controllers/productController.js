@@ -64,7 +64,7 @@ const searchProducts = async (req, res) => {
   }
   try {
     const result = await pool.query(
-      `SELECT id, name, description, price, category 
+      `SELECT id, name, description, price, category, discount
        FROM products 
        WHERE name ILIKE $1 OR category ILIKE $1`,
       [`%${query}%`]
